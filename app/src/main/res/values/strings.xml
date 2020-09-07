@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">htc-test</string>
+    <string name="rv_employee_item_name">Name:</string>
+    <string name="rv_employee_item_phone_number">Phone number:</string>
+    <string name="rv_employee_item_skills">Skills:</string>
+    <string name="rv_company_item_name">Company name:</string>
+    <string name="rv_company_age">Age:</string>
+    <string name="rv_company_competences">Competences:</string>
+    <string name="rv_employee_item_type">Employee</string>
+    <string name="rv_company_item_type">Company</string>
+</resources>
