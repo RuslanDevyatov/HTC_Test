@@ -1,10 +1,5 @@
 package ru.devyatov.htc_test;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,9 +14,9 @@ public class URLConnector {
 
     private static final String URL = "http://www.mocky.io/v2/5ddcd3673400005800eae483";
 
-    static JSONObject getJSONFile () {
+    static JSONObject getJSONObject() {
 
-        JSONObject JSONFile = null;
+        JSONObject JSONObject = null;
         HttpURLConnection urlConnection = null;
         BufferedReader bufferedReader = null;
         String requestResult;
@@ -49,8 +44,8 @@ public class URLConnector {
             }
 
             requestResult = strBuilder.toString();
-            JSONFile = new JSONObject(requestResult);
-            JSONFile = JSONFile.getJSONObject("company");
+            JSONObject = new JSONObject(requestResult);
+            JSONObject = JSONObject.getJSONObject("company");
 
         } catch (IOException | JSONException e) {
             e.printStackTrace();
@@ -67,6 +62,6 @@ public class URLConnector {
                 }
             }
         }
-        return JSONFile;
+        return JSONObject;
     }
 }

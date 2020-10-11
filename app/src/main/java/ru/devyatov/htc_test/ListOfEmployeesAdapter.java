@@ -11,10 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ListOfEmployeesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder > {
+public class ListOfEmployeesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public final static int WRONG_ITEM_TYPE = -1;
     public final static int EMPLOYEE_ITEM_TYPE = 0;
     public final static int COMPANY_ITEM_TYPE = 1;
+
+    public final static String BLANK_FIELD = "⸻";
 
     private List<Object> list;
 
@@ -31,9 +34,31 @@ public class ListOfEmployeesAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public EmployeeViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = (TextView) itemView.findViewById(R.id.rv_employee_item_name_value);
-            phoneNumber = (TextView) itemView.findViewById(R.id.rv_employee_item_phone_number_value);
-            skills = (TextView) itemView.findViewById(R.id.rv_employee_item_skills_value);
+            name = itemView.findViewById(R.id.rv_employee_item_name_value);
+            phoneNumber = itemView.findViewById(R.id.rv_employee_item_phone_number_value);
+            skills = itemView.findViewById(R.id.rv_employee_item_skills_value);
+        }
+
+        public void onBind(Employee employee) {
+
+            String mName = BLANK_FIELD;
+            if (employee.getName() != null) {
+                mName = employee.getName();
+            }
+
+            String mPhoneNumber = BLANK_FIELD;
+            if (employee.getPhoneNumber() > 0) {
+                mPhoneNumber = Integer.toString(employee.getPhoneNumber());
+            }
+
+            String mSkills = BLANK_FIELD;
+            if (employee.getSkills() != null) {
+                mSkills = TextUtils.join(", ", employee.getSkills());
+            }
+
+            name.setText(mName);
+            phoneNumber.setText(mPhoneNumber);
+            skills.setText(mSkills);
         }
     }
 
@@ -46,9 +71,31 @@ public class ListOfEmployeesAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public CompanyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            name = (TextView) itemView.findViewById(R.id.rv_company_item_name_value);
-            age = (TextView) itemView.findViewById(R.id.rv_company_age_value);
-            competences = (TextView) itemView.findViewById(R.id.rv_company_competences_value);
+            name = itemView.findViewById(R.id.rv_company_item_name_value);
+            age = itemView.findViewById(R.id.rv_company_age_value);
+            competences = itemView.findViewById(R.id.rv_company_competences_value);
+        }
+
+        public void onBind(Company company) {
+
+            String mName = BLANK_FIELD;
+            if (company.getName() != null) {
+                mName = company.getName();
+            }
+
+            String mAge = BLANK_FIELD;
+            if (company.getAge() > 0) {
+                mAge = Integer.toString(company.getAge());
+            }
+
+            String mCompetences = BLANK_FIELD;
+            if (company.getCompetences() != null) {
+                mCompetences = TextUtils.join(", ", company.getCompetences());
+            }
+
+            name.setText(mName);
+            age.setText(mAge);
+            competences.setText(mCompetences);
         }
     }
 
@@ -64,45 +111,20 @@ public class ListOfEmployeesAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             case COMPANY_ITEM_TYPE:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_company_item, parent,false);
                 return new CompanyViewHolder(view);
+            default:
+                throw new RuntimeException("Wrong item type");
         }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Object obj = list.get(position);
-        switch (obj.getClass().getSimpleName()) {
-            case "Employee":
-                Employee employee = (Employee)obj;
 
-                String name = "⸻";
-                if (employee.getName() != null) {
-                    name = employee.getName();
-                }
-
-                String phoneNumber = "⸻";
-                if (employee.getPhoneNumber() > 0) {
-                    phoneNumber = Integer.toString(employee.getPhoneNumber());
-                }
-
-                String skills = "⸻";
-                if (employee.getSkills() != null) {
-                    skills = TextUtils.join(", ", employee.getSkills());
-                }
-
-
-                ((EmployeeViewHolder) holder).name.setText(name);
-                ((EmployeeViewHolder) holder).phoneNumber.setText(phoneNumber);
-                ((EmployeeViewHolder) holder).skills.setText(skills);
-                break;
-            case "Company":
-                Company company = (Company) obj;
-                ((CompanyViewHolder) holder).name.setText(company.getName());
-                ((CompanyViewHolder) holder).age.setText(Integer.toString(company.getAge()));
-                ((CompanyViewHolder) holder).competences.setText(
-                        TextUtils.join(", ", company.getCompetences()));
-                break;
+        if (obj instanceof Company) {
+            ((CompanyViewHolder)holder).onBind((Company) obj);
+        } else if (obj instanceof Employee) {
+            ((EmployeeViewHolder)holder).onBind((Employee) obj);
         }
     }
 
@@ -118,12 +140,13 @@ public class ListOfEmployeesAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position) {
 
         Object obj = list.get(position);
-        switch (obj.getClass().getSimpleName()) {
-            case "Employee":
-                return EMPLOYEE_ITEM_TYPE;
-            case "Company":
-                return COMPANY_ITEM_TYPE;
+
+        if (obj instanceof Company) {
+            return COMPANY_ITEM_TYPE;
+        } else if (obj instanceof Employee) {
+            return EMPLOYEE_ITEM_TYPE;
+        } else {
+            return WRONG_ITEM_TYPE;
         }
-        return 0;
     }
 }

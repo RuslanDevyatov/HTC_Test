@@ -1,7 +1,6 @@
 package ru.devyatov.htc_test;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +31,7 @@ public class ListOfEmployeesLoader extends AsyncTaskLoader<JSONObject> {
     @Override
     public JSONObject loadInBackground() {
 
-        JSONObject result = URLConnector.getJSONFile();
+        JSONObject result = URLConnector.getJSONObject();
 
         if (result != null) {
             isItLoaded = true;
